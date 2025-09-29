@@ -23,24 +23,6 @@ class RosBagImageSubscriber(Node):
         # ros2 topic info /camera/image_raw/compressed --verbose
         # Type: sensor_msgs/msg/CompressedImage
 
-        # Publisher count: 1
-
-        # Node name: rosbag2_player
-        # Node namespace: /
-        # Topic type: sensor_msgs/msg/CompressedImage
-        # Endpoint type: PUBLISHER
-        # GID: 01.0f.0c.27.f7.1b.f4.fd.00.00.00.00.00.00.12.03.00.00.00.00.00.00.00.00
-        # QoS profile:
-        # Reliability: RELIABLE
-        # History (Depth): UNKNOWN
-        # Durability: VOLATILE
-        # Lifespan: Infinite
-        # Deadline: Infinite
-        # Liveliness: AUTOMATIC
-        # Liveliness lease duration: Infinite
-
-        # Subscription count: 0
-
         self.subscription = self.create_subscription(
             CompressedImage,
             topic_name,
@@ -51,6 +33,9 @@ class RosBagImageSubscriber(Node):
 
         self.frame_counter = 0 # Frame counter for received images
 
+        # Obtain the start time from the first message received
+        self.start_time = None
+
 
     def listener_callback(self, msg):
         self.get_logger().info('Received image message')
@@ -60,11 +45,17 @@ class RosBagImageSubscriber(Node):
         frame = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
         # We convert the compressed image data into a format that OpenCV can work with (a numpy array)
         # This allows us to process and display the image using OpenCV functions.
+        # Explanation of convertion process guided with AI Copilot Sonnet model
+        
+        # Set start time
+        if self.start_time is None:
+            self.start_time = msg.header.stamp.sec + msg.header.stamp.nanosec * 1e-9
 
-        # Add info
+        
         self.frame_counter += 1
         timestamp = msg.header.stamp.sec + msg.header.stamp.nanosec * 1e-9
 
+        # Add info
         cv2.putText(frame, f"Frame: {self.frame_counter} (Compressed)", (10, 30),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
 
@@ -74,8 +65,8 @@ class RosBagImageSubscriber(Node):
         cv2.putText(frame, f"ROS Time: {timestamp:.2f}", (10, 110),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
 
-        cv2.putText(frame, f"Elapsed: 7", (10, 150),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2) #TODO show elapsed time #{timestamp - self.start_time:.2f}
+        cv2.putText(frame, f"Elapsed: {timestamp - self.start_time:.2f}", (10, 150),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
 
         # Display video
         cv2.imshow("Camera Feed", frame)
