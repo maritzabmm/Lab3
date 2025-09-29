@@ -5,9 +5,6 @@ from datetime import datetime
 # Read image 
 image = cv2.imread('./images/drone_image.jpg') 
 
-# Convert color spaces 
-#hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV) 
-
 # Define coordinates, color and thickness for rectangle
 x1, y1, x2, y2 = 100, 100, 200, 200
 rectangle_B, rectangle_G, rectangle_R = 255, 0, 0
@@ -38,7 +35,6 @@ cv2.putText(image,'Adolfo + Maritza',(1020,80), font, names_font_scale,names_col
 
 # Get current timestamp
 current_timestamp = datetime.now()
-print(current_timestamp)  # Outputs the current timestamp
 
 # Write timestamp
 timestamp_font=cv2.FONT_HERSHEY_DUPLEX
@@ -47,4 +43,6 @@ timestamp_color = (0, 240, 74)
 timestamp_thickness = 1
 cv2.putText(image, str(current_timestamp), (10, 1050), timestamp_font, timestamp_font_scale, timestamp_color, timestamp_thickness)
 
-processed_img = cv2.imwrite('./images/processed_image.jpg', image)
+processed_img = cv2.imwrite('./images/task1_processed.jpg', image)
+
+print("Image processed and saved as 'task1_processed.jpg'")
