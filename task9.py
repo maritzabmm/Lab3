@@ -75,17 +75,17 @@ class HarrisCornerStudent(Node):
 
         # TO DO: Mark corners on original image
         corners_img = frame.copy()
-        corners_img[dst > 0.01 * dst.max()] = [0, 0, 255]
+        corners_img[dst > 0.04 * dst.max()] = [0, 255, 0]
 
         # TO DO: Convert gray to BGR for stacking
         gray = cv2.cvtColor(gray8, cv2.COLOR_GRAY2RGB) # AI used to identify where the code was incorrect.
         # Specifically regarding the grayscale visualization (needs type uint8) and the use of Harris corner detection (uses float32). 
 
         # TO DO: Add labels for each image (Original, Grayscale, Heatmap, Corners Overlay)
-        cv2.putText(frame, "Original", (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2, cv2.LINE_AA)
+        cv2.putText(frame, "Original", (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (237, 244, 34), 2, cv2.LINE_AA)
         cv2.putText(gray, "Grayscale", (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2, cv2.LINE_AA)
-        cv2.putText(heatmap, "Heatmap", (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2, cv2.LINE_AA)
-        cv2.putText(corners_img, "Overlay", (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2, cv2.LINE_AA)
+        cv2.putText(heatmap, "Heatmap", (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (21, 242, 242), 2, cv2.LINE_AA)
+        cv2.putText(corners_img, "Overlay", (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2, cv2.LINE_AA)
         
         # TO DO: Stack images in a 2x2 grid for step-by-step visualization
         top = np.hstack((frame, gray)) if gray is not None else frame
